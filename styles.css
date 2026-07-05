@@ -6,6 +6,7 @@
   font-display: swap;
   font-style: normal;
 }
+
 @font-face {
   font-family: "Inter";
   src: url("assets/fonts/inter-v20-latin/inter-v20-latin-600.woff2")
@@ -14,6 +15,7 @@
   font-display: swap;
   font-style: normal;
 }
+
 @font-face {
   font-family: "Inter";
   src: url("assets/fonts/inter-v20-latin/inter-v20-latin-700.woff2")
@@ -85,7 +87,7 @@ body {
     color 0.2s;
 }
 
-/* ===== Layout container (centered, max-width, vertically centered) ===== */
+/* ===== Layout container ===== */
 #app {
   max-width: 60rem;
   margin: 0 auto;
@@ -100,7 +102,6 @@ body {
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: start;
   gap: var(--space-6);
 }
 
@@ -121,15 +122,57 @@ body {
   font-style: italic;
 }
 
-/* ===== Subject list ===== */
-.subject-list {
+/* ===== Right column ===== */
+.quiz-column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+/* ===== Stepped flow: slide + fade ===== */
+.steps {
+  position: relative;
+  min-height: 20rem;
+}
+
+.step {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  transform: translateX(2rem);
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease,
+    visibility 0.35s ease;
+}
+
+.step.active {
+  opacity: 1;
+  transform: translateX(0);
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.step.leaving {
+  opacity: 0;
+  transform: translateX(-2rem);
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* ===== Choice list + cards ===== */
+.choice-list {
   list-style: none;
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
 }
 
-.subject-card {
+.choice-card {
   display: flex;
   align-items: center;
   gap: var(--space-4);
@@ -150,20 +193,20 @@ body {
     transform 0.1s;
 }
 
-.subject-card:hover {
+.choice-card:hover {
   border-color: var(--color-accent);
 }
 
-.subject-card:active {
+.choice-card:active {
   transform: scale(0.99);
 }
 
-.subject-card:focus-visible {
+.choice-card:focus-visible {
   outline: 3px solid var(--color-accent);
   outline-offset: 2px;
 }
 
-.subject-icon {
+.choice-icon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -182,7 +225,7 @@ body {
     gap: var(--space-8);
   }
   .intro,
-  .subject-list {
+  .quiz-column {
     flex: 1;
   }
   .intro h1 {

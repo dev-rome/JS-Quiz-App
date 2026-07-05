@@ -9,50 +9,114 @@
   </head>
   <body>
     <header>
-      <!-- header -->
+      <!-- header: title + theme toggle (added later) -->
     </header>
     <main>
       <div id="app">
         <section class="start-screen">
           <div class="intro">
             <h1><span class="intro-light">Welcome to the</span> Quiz App</h1>
-            <p>
-              Choose a category, difficulty, and number of questions to begin.
-            </p>
+            <p>Pick a subject to get started.</p>
           </div>
 
-          <ul class="subject-list">
-            <li>
-              <button type="button" class="subject-card" data-subject="9">
-                <span class="subject-icon" aria-hidden="true">🧠</span>
-                <span class="subject-name">General Knowledge</span>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="subject-card" data-subject="17">
-                <span class="subject-icon" aria-hidden="true">🔬</span>
-                <span class="subject-name">Science &amp; Nature</span>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="subject-card" data-subject="23">
-                <span class="subject-icon" aria-hidden="true">📜</span>
-                <span class="subject-name">History</span>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="subject-card" data-subject="22">
-                <span class="subject-icon" aria-hidden="true">🌍</span>
-                <span class="subject-name">Geography</span>
-              </button>
-            </li>
-          </ul>
+          <div class="quiz-column">
+            <div class="steps">
+              <!-- Step 1: Category -->
+              <div class="step active" data-step="1">
+                <ul class="choice-list">
+                  <li>
+                    <button type="button" class="choice-card" data-value="9">
+                      <span class="choice-icon" aria-hidden="true">🧠</span>
+                      <span class="choice-name">General Knowledge</span>
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" class="choice-card" data-value="17">
+                      <span class="choice-icon" aria-hidden="true">🔬</span>
+                      <span class="choice-name">Science &amp; Nature</span>
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" class="choice-card" data-value="23">
+                      <span class="choice-icon" aria-hidden="true">📜</span>
+                      <span class="choice-name">History</span>
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" class="choice-card" data-value="22">
+                      <span class="choice-icon" aria-hidden="true">🌍</span>
+                      <span class="choice-name">Geography</span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Step 2: Difficulty -->
+              <div class="step" data-step="2">
+                <ul class="choice-list">
+                  <li>
+                    <button type="button" class="choice-card" data-value="">
+                      <span class="choice-icon" aria-hidden="true">🎲</span>
+                      <span class="choice-name">Any Difficulty</span>
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" class="choice-card" data-value="easy">
+                      <span class="choice-icon" aria-hidden="true">🟢</span>
+                      <span class="choice-name">Easy</span>
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      type="button"
+                      class="choice-card"
+                      data-value="medium"
+                    >
+                      <span class="choice-icon" aria-hidden="true">🟡</span>
+                      <span class="choice-name">Medium</span>
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" class="choice-card" data-value="hard">
+                      <span class="choice-icon" aria-hidden="true">🔴</span>
+                      <span class="choice-name">Hard</span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Step 3: Number of questions -->
+              <div class="step" data-step="3">
+                <ul class="choice-list">
+                  <li>
+                    <button type="button" class="choice-card" data-value="5">
+                      <span class="choice-name">5 Questions</span>
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" class="choice-card" data-value="10">
+                      <span class="choice-name">10 Questions</span>
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" class="choice-card" data-value="15">
+                      <span class="choice-name">15 Questions</span>
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button" class="choice-card" data-value="20">
+                      <span class="choice-name">20 Questions</span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </section>
       </div>
     </main>
-
     <footer>
-      <!-- footer -->
+      <!-- footer (added later) -->
     </footer>
   </body>
 </html>
