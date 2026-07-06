@@ -1,5 +1,26 @@
 "use strict";
-// --- List of categories --- 
+
+// --- Theme toggle ---
+const checkBoxTheme = document.querySelector("#theme-checkbox");
+
+// flip the theme when the switch is toggled, and remember the choice
+checkBoxTheme.addEventListener("change", () => {
+    // checked = light, unchecked = dark (dark is the default)
+    const theme = checkBoxTheme.checked ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+});
+
+// on load, restore the saved theme (if the user chose one before)
+const savedTheme = localStorage.getItem("theme");
+
+if (savedTheme) {
+    document.documentElement.setAttribute("data-theme", savedTheme);
+    // sync the switch position to match the restored theme
+    checkBoxTheme.checked = savedTheme === "light";
+}
+
+// --- List of categories ---
 const categories = [
     { id: "9", name: "General Knowledge", icon: "🧠" },
     { id: "17", name: "Science & Nature", icon: "🔬" },
@@ -10,7 +31,8 @@ const categories = [
     { id: "21", name: "Sports", icon: "⚽" },
     { id: "12", name: "Music", icon: "🎵" },
 ];
-// --- Render Categories --- 
+
+// --- Render Categories ---
 function renderCategories() {
     const shuffleCategories = [...categories].sort(() => Math.random() - 0.5);
     const randomCategories = shuffleCategories.slice(0, 4);
