@@ -143,6 +143,46 @@ function decodeHTML(text) {
     return textarea.value;
 }
 
+const answerList = document.querySelector("#answer-list");
+const submitBtn = document.querySelector("#submit-btn");
+const answerError = document.querySelector("#answer-error");
+
+answerList.addEventListener("click", (event) => {
+    const card = event.target.closest(".answer-card");
+    if (!card) return;
+
+    // clear selection from all cards, then select the clicked one
+    const allCards = answerList.querySelectorAll(".answer-card");
+    allCards.forEach((c) => c.classList.remove("selected"));
+    card.classList.add("selected");
+});
+
+submitBtn.addEventListener("click", () => {
+    const selectedCard = answerList.querySelector(".answer-card.selected");
+
+    // validate: nothing selected → show error, stop
+    if (!selectedCard) {
+        answerError.classList.remove("hidden");
+        return;
+    }
+    answerError.classList.add("hidden");
+
+    const currentQuestion = questionsConfig.question[questionsConfig.currentIndex];
+    const correctAnswer = currentQuestion.correct_answer;
+    const selectedAnswer = selectedCard.dataset.answer;
+    const allCards = answerList.querySelectorAll(".answer-card");
+
+    allCards.forEach((card) => {
+        if (card.dataset.answer === correctAnswer) {
+            card.classList.add("correct");
+        }
+    });
+
+    const isCorrect = selectedAnswer === correctAnswer;
+    if (!isCorrect) selectedCard.classList.add("wrong");
+    if (isCorrect) questionsConfig.score++;
+});
+
 function renderQuestion() {
     const currentQuestion = questionsConfig.question[questionsConfig.currentIndex];
     const currentIndex = questionsConfig.currentIndex;
@@ -151,8 +191,6 @@ function renderQuestion() {
     const shuffledAnswers = [...answers].sort(() => Math.random() - 0.5);
     const questionText = document.querySelector(".question-text");
     questionText.textContent = decodeHTML(currentQuestion.question);
-
-    const answerList = document.querySelector("#answer-list");
 
     answerList.innerHTML = shuffledAnswers.map((answer, index) => {
         const letter = ["A", "B", "C", "D"][index];
