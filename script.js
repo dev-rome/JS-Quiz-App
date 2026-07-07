@@ -81,7 +81,7 @@ stepsContainer.addEventListener("click", async (event) => {
     // last step? start the quiz
     if (stepNum === 3) {
         const questions = await fetchQuestions(quizConfig);
-        console.log("Questions:", questions);
+        startQuiz(questions);
         return;
     }
 
@@ -117,4 +117,59 @@ async function fetchQuestions(config) {
     } catch (error) {
         console.error("Error fetching data", error.message);
     }
+}
+
+// --- State ---
+const questionsConfig = { question: [], currentIndex: 0, score: 0, };
+// --- Elements ---
+const startScreen = document.querySelector(".start-screen");
+const questionsScreen = document.querySelector(".question-screen");
+
+function startQuiz(questions) {
+    if (!questions || questions.length === 0) return;
+
+    questionsConfig.question = questions;
+    questionsConfig.currentIndex = 0;
+    questionsConfig.score = 0;
+    startScreen.classList.add("hidden");
+    questionsScreen.classList.remove("hidden");
+
+    renderQuestion();
+}
+
+function decodeHTML(text) {
+    const textarea = document.createElement("textarea");
+    textarea.innerHTML = text;
+    return textarea.value;
+}
+
+function renderQuestion() {
+    const currentQuestion = questionsConfig.question[questionsConfig.currentIndex];
+    const currentIndex = questionsConfig.currentIndex;
+    const total = questionsConfig.question.length;
+    const answers = [currentQuestion.correct_answer, ...currentQuestion.incorrect_answers];
+    const shuffledAnswers = [...answers].sort(() => Math.random() - 0.5);
+    const questionText = document.querySelector(".question-text");
+    questionText.textContent = decodeHTML(currentQuestion.question);
+
+    const answerList = document.querySelector("#answer-list");
+
+    answerList.innerHTML = shuffledAnswers.map((answer, index) => {
+        const letter = ["A", "B", "C", "D"][index];
+        const decoded = decodeHTML(answer);
+        return `
+    <li>
+      <button type="button" class="answer-card" data-answer="${answer}">
+        <span class="answer-letter" aria-hidden="true">${letter}</span>
+        <span class="answer-body">${decoded}</span>
+      </button>
+    </li>
+  `;
+    }).join("");
+
+    const questionProgress = document.querySelector("#question-progress");
+    const progressFill = document.querySelector("#progress-fill");
+
+    questionProgress.textContent = `Question ${currentIndex + 1} of ${total}`;
+    progressFill.style.width = ((currentIndex + 1) / total) * 100 + "%";
 }
