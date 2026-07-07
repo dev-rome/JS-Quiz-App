@@ -193,7 +193,7 @@ submitBtn.addEventListener("click", () => {
         if (questionsConfig.currentIndex < questionsConfig.question.length) {
             renderQuestion();
         } else {
-            console.log("Quiz complete! Score:", questionsConfig.score);
+            showResults();
         }
     }, 1500);
 });
@@ -227,3 +227,45 @@ function renderQuestion() {
     questionProgress.textContent = `Question ${currentIndex + 1} of ${total}`;
     progressFill.style.width = ((currentIndex + 1) / total) * 100 + "%";
 }
+
+const resultsScreen = document.querySelector(".results-screen");
+const resultsScore = document.querySelector("#results-score");
+const resultsMessage = document.querySelector("#results-message");
+
+function showResults() {
+    questionsScreen.classList.add("hidden");
+    resultsScreen.classList.remove("hidden");
+
+    const score = questionsConfig.score;
+    const total = questionsConfig.question.length;
+    resultsScore.textContent = `You scored ${score} out of ${total}`;
+
+    // optional message based on ratio
+    const ratio = score / total;
+    let message;
+    if (ratio === 1) message = "Perfect score! 🎉";
+    else if (ratio >= 0.7) message = "Great job!";
+    else if (ratio >= 0.4) message = "Not bad — keep practicing!";
+    else message = "Keep trying, you'll get there!";
+    resultsMessage.textContent = message;
+}
+
+const playAgainBtn = document.querySelector("#play-again-btn");
+
+playAgainBtn.addEventListener("click", () => {
+    // switch back to the start screen
+    resultsScreen.classList.add("hidden");
+    startScreen.classList.remove("hidden");
+
+    // reset the stepped selection back to step 1
+    document.querySelectorAll(".step").forEach((step) => {
+        step.classList.remove("active", "leaving");
+    });
+    document.querySelector('.step[data-step="1"]').classList.add("active");
+
+    // reset the collected config + fresh categories
+    quizConfig.category = null;
+    quizConfig.difficulty = null;
+    quizConfig.amount = null;
+    renderCategories();
+});
