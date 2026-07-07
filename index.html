@@ -9,6 +9,7 @@
   </head>
   <body>
     <header>
+      <div id="subject-label" class="subject-label"></div>
       <div class="theme-toggle">
         <span aria-hidden="true">🌙</span>
         <label class="switch">
@@ -93,6 +94,28 @@
                 </ul>
               </div>
             </div>
+          </div>
+        </section>
+
+        <section class="question-screen hidden">
+          <div class="question-info">
+            <p id="question-progress" class="question-count">
+              Question 1 of 10
+            </p>
+            <h1 id="question-text" class="question-text"></h1>
+            <div class="progress-track">
+              <div id="progress-fill" class="progress-fill"></div>
+            </div>
+          </div>
+
+          <div class="answer-column">
+            <ul id="answer-list" class="answer-list"></ul>
+            <button type="button" id="submit-btn" class="submit-btn">
+              Submit Answer
+            </button>
+            <p id="answer-error" class="answer-error hidden">
+              Please select an answer.
+            </p>
           </div>
         </section>
       </div>
