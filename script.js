@@ -170,32 +170,8 @@ submitBtn.addEventListener("click", () => {
     }
     answerError.classList.add("hidden");
 
-    // 1. reveal + score (immediate response to this question)
-    const currentQuestion = questionsConfig.question[questionsConfig.currentIndex];
-    const correctAnswer = currentQuestion.correct_answer;
-    const selectedAnswer = selectedCard.dataset.answer;
-    const allCards = answerList.querySelectorAll(".answer-card");
-
-    allCards.forEach((card) => {
-        if (card.dataset.answer === correctAnswer) card.classList.add("correct");
-    });
-
-    const isCorrect = selectedAnswer === correctAnswer;
-    if (!isCorrect) selectedCard.classList.add("wrong");
-    if (isCorrect) questionsConfig.score++;
-
-    // 2. lock this question
-    answered = true;
-
-    // 3. pause, then advance (deferred)
-    setTimeout(() => {
-        questionsConfig.currentIndex++;
-        if (questionsConfig.currentIndex < questionsConfig.question.length) {
-            renderQuestion();
-        } else {
-            showResults();
-        }
-    }, 1500);
+    stopTimer();
+    revealAnswer(selectedCard);
 });
 
 function renderQuestion() {
@@ -226,6 +202,39 @@ function renderQuestion() {
 
     questionProgress.textContent = `Question ${currentIndex + 1} of ${total}`;
     progressFill.style.width = ((currentIndex + 1) / total) * 100 + "%";
+
+    startTimer();
+}
+
+function revealAnswer(selectedCard) {
+    const currentQuestion = questionsConfig.question[questionsConfig.currentIndex];
+    const correctAnswer = currentQuestion.correct_answer;
+    const allCards = answerList.querySelectorAll(".answer-card");
+
+    // always reveal the correct answer (green)
+    allCards.forEach((card) => {
+        if (card.dataset.answer === correctAnswer) card.classList.add("correct");
+    });
+
+    // only if they actually picked something:
+    if (selectedCard) {
+        const isCorrect = selectedCard.dataset.answer === correctAnswer;
+        if (!isCorrect) selectedCard.classList.add("wrong");
+        if (isCorrect) questionsConfig.score++;
+    }
+
+    // lock this question
+    answered = true;
+
+    // pause, then advance
+    setTimeout(() => {
+        questionsConfig.currentIndex++;
+        if (questionsConfig.currentIndex < questionsConfig.question.length) {
+            renderQuestion();
+        } else {
+            showResults();
+        }
+    }, 1500);
 }
 
 const resultsScreen = document.querySelector(".results-screen");
@@ -269,3 +278,33 @@ playAgainBtn.addEventListener("click", () => {
     quizConfig.amount = null;
     renderCategories();
 });
+
+let timerId = null;
+let timeLeft = 15;
+const timerEl = document.querySelector("#timer");
+
+function startTimer() {
+    stopTimer();
+    timeLeft = 15;
+    timerEl.textContent = timeLeft;
+    timerEl.classList.remove("low");
+
+    timerId = setInterval(() => {
+        timeLeft--;
+        timerEl.textContent = timeLeft;
+
+        if (timeLeft <= 5) {
+            timerEl.classList.add("low");
+        }
+
+        if (timeLeft <= 0) {
+            stopTimer();
+            answerError.classList.add("hidden");
+            revealAnswer(null);
+        }
+    }, 1000);
+}
+
+function stopTimer() {
+    clearInterval(timerId);
+}

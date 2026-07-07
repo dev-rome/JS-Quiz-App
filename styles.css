@@ -303,6 +303,25 @@ header {
   margin-bottom: var(--space-6);
 }
 
+/* ===== Timer ===== */
+.timer {
+  display: inline-block;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  background-color: var(--color-surface);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  margin-bottom: var(--space-4);
+  min-width: 4rem;
+  text-align: center;
+}
+
+/* warning state when time is low */
+.timer.low {
+  color: var(--color-warning);
+}
+
 /* progress bar */
 .progress-track {
   width: 100%;
