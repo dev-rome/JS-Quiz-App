@@ -125,6 +125,8 @@ const questionsConfig = { question: [], currentIndex: 0, score: 0, };
 const startScreen = document.querySelector(".start-screen");
 const questionsScreen = document.querySelector(".question-screen");
 
+let answered = false;
+
 function startQuiz(questions) {
     if (!questions || questions.length === 0) return;
 
@@ -148,6 +150,7 @@ const submitBtn = document.querySelector("#submit-btn");
 const answerError = document.querySelector("#answer-error");
 
 answerList.addEventListener("click", (event) => {
+    if (answered) return;
     const card = event.target.closest(".answer-card");
     if (!card) return;
 
@@ -158,32 +161,45 @@ answerList.addEventListener("click", (event) => {
 });
 
 submitBtn.addEventListener("click", () => {
-    const selectedCard = answerList.querySelector(".answer-card.selected");
+    if (answered) return;
 
-    // validate: nothing selected → show error, stop
+    const selectedCard = answerList.querySelector(".answer-card.selected");
     if (!selectedCard) {
         answerError.classList.remove("hidden");
         return;
     }
     answerError.classList.add("hidden");
 
+    // 1. reveal + score (immediate response to this question)
     const currentQuestion = questionsConfig.question[questionsConfig.currentIndex];
     const correctAnswer = currentQuestion.correct_answer;
     const selectedAnswer = selectedCard.dataset.answer;
     const allCards = answerList.querySelectorAll(".answer-card");
 
     allCards.forEach((card) => {
-        if (card.dataset.answer === correctAnswer) {
-            card.classList.add("correct");
-        }
+        if (card.dataset.answer === correctAnswer) card.classList.add("correct");
     });
 
     const isCorrect = selectedAnswer === correctAnswer;
     if (!isCorrect) selectedCard.classList.add("wrong");
     if (isCorrect) questionsConfig.score++;
+
+    // 2. lock this question
+    answered = true;
+
+    // 3. pause, then advance (deferred)
+    setTimeout(() => {
+        questionsConfig.currentIndex++;
+        if (questionsConfig.currentIndex < questionsConfig.question.length) {
+            renderQuestion();
+        } else {
+            console.log("Quiz complete! Score:", questionsConfig.score);
+        }
+    }, 1500);
 });
 
 function renderQuestion() {
+    answered = false;
     const currentQuestion = questionsConfig.question[questionsConfig.currentIndex];
     const currentIndex = questionsConfig.currentIndex;
     const total = questionsConfig.question.length;
