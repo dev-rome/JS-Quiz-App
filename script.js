@@ -56,6 +56,10 @@ const quizConfig = { category: null, difficulty: null, amount: null };
 // --- Elements ---
 const stepsContainer = document.querySelector(".steps");
 const stepHint = document.querySelector(".intro p");
+const loadingScreen = document.querySelector("#loading-screen");
+const errorScreen = document.querySelector("#error-screen");
+const errorText = document.querySelector("#error-text");
+const tryAgainBtn = document.querySelector("#try-again-btn");
 
 // hint text per step
 const hints = {
@@ -80,8 +84,20 @@ stepsContainer.addEventListener("click", async (event) => {
 
     // last step? start the quiz
     if (stepNum === 3) {
-        const questions = await fetchQuestions(quizConfig);
-        startQuiz(questions);
+        // show loading, hide start
+        startScreen.classList.add("hidden");
+        loadingScreen.classList.remove("hidden");
+
+        try {
+            const questions = await fetchQuestions(quizConfig);
+            startQuiz(questions);
+        } catch (error) {
+            errorText.textContent = error.message;
+            errorScreen.classList.remove("hidden");
+        } finally {
+            loadingScreen.classList.add("hidden");
+        }
+
         return;
     }
 
@@ -99,24 +115,25 @@ async function fetchQuestions(config) {
     const params = new URLSearchParams();
     params.append("amount", config.amount);
     params.append("category", config.category);
-    params.append('type', 'multiple');
+    params.append("type", "multiple");
     if (config.difficulty) {
         params.append("difficulty", config.difficulty);
     }
-    try {
-        const url = `https://opentdb.com/api.php?${params.toString()}`;
-        const res = await fetch(url);
-        if (!res.ok) {
-            throw new Error("There was a error fetching trivia data.");
-        }
-        const data = await res.json();
-        if (data.response_code !== 0) {
-            throw new Error("Not enough questions for those options.");
-        }
-        return data.results;
-    } catch (error) {
-        console.error("Error fetching data", error.message);
+
+    const url = `https://opentdb.com/api.php?${params.toString()}`;
+    const res = await fetch(url);
+
+    if (!res.ok) {
+        throw new Error("There was an error fetching trivia data.");
     }
+
+    const data = await res.json();
+
+    if (data.response_code !== 0) {
+        throw new Error("Not enough questions for those options.");
+    }
+
+    return data.results;
 }
 
 // --- State ---
@@ -344,3 +361,11 @@ function renderHighScores() {
         return `<li>${entry.score}/${entry.total} — ${entry.category} <span>${entry.date}</span></li>`;
     }).join("");
 }
+
+tryAgainBtn.addEventListener("click", () => {
+    errorScreen.classList.add("hidden");
+    startScreen.classList.remove("hidden");
+    // reset steps to step 1 (like Play Again)
+    document.querySelectorAll(".step").forEach((s) => s.classList.remove("active", "leaving"));
+    document.querySelector('.step[data-step="1"]').classList.add("active");
+});

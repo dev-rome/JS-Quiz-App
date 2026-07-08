@@ -136,6 +136,20 @@
             </button>
           </div>
         </section>
+
+        <!-- Loading state -->
+        <section class="loading-screen hidden" id="loading-screen">
+          <div class="spinner" aria-hidden="true"></div>
+          <p>Loading questions…</p>
+        </section>
+
+        <!-- Error state -->
+        <section class="error-screen hidden" id="error-screen">
+          <p class="error-text" id="error-text">Something went wrong.</p>
+          <button type="button" id="try-again-btn" class="try-again-btn">
+            Try Again
+          </button>
+        </section>
       </div>
     </main>
     <footer>
