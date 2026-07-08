@@ -497,6 +497,7 @@ header {
   font-family: inherit;
   font-size: 1.05rem;
   font-weight: 700;
+  margin-top: var(--space-6);
   padding: var(--space-4) var(--space-6);
   border: none;
   border-radius: var(--radius-full);
@@ -519,6 +520,33 @@ header {
 .play-again-btn:focus-visible {
   outline: 3px solid var(--color-accent);
   outline-offset: 2px;
+}
+
+.high-scores {
+  margin-top: var(--space-6);
+  text-align: left;
+}
+
+.high-scores-title {
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-3);
+}
+
+.high-scores-list {
+  list-style-position: inside;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.high-scores-list li {
+  background-color: var(--color-bg);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3);
+  font-size: 0.95rem;
 }
 
 /* ===== Desktop: two columns ===== */

@@ -249,6 +249,9 @@ function showResults() {
     const total = questionsConfig.question.length;
     resultsScore.textContent = `You scored ${score} out of ${total}`;
 
+    saveScore();
+    renderHighScores();
+
     // optional message based on ratio
     const ratio = score / total;
     let message;
@@ -307,4 +310,37 @@ function startTimer() {
 
 function stopTimer() {
     clearInterval(timerId);
+}
+
+function saveScore() {
+    // 1. read existing scores (default to empty array if none)
+    const saved = localStorage.getItem("highScores");
+    const scores = saved ? JSON.parse(saved) : [];
+
+    // 2. map the category id → name for display
+    const categoryName =
+        categories.find((c) => c.id === quizConfig.category)?.name || "Unknown";
+
+    // 3. build the new entry
+    const entry = {
+        score: questionsConfig.score,
+        total: questionsConfig.question.length,
+        category: categoryName,
+        date: new Date().toLocaleDateString(),
+    };
+
+    // 4. add it and save back
+    scores.push(entry);
+    localStorage.setItem("highScores", JSON.stringify(scores));
+}
+
+function renderHighScores() {
+    const saved = localStorage.getItem("highScores");
+    const scores = saved ? JSON.parse(saved) : [];
+    const topScores = scores.sort((a, b) => b.score - a.score).slice(0, 5);
+    const highScoresList = document.querySelector("#high-scores-list");
+
+    highScoresList.innerHTML = topScores.map((entry) => {
+        return `<li>${entry.score}/${entry.total} — ${entry.category} <span>${entry.date}</span></li>`;
+    }).join("");
 }
