@@ -76,7 +76,8 @@
   padding: 0;
 }
 
-html, body {
+html,
+body {
   overflow-x: hidden;
 }
 
@@ -94,7 +95,7 @@ body {
 /* ===== Header container ===== */
 header {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   padding: var(--space-8) var(--space-6);
   max-width: 60rem;

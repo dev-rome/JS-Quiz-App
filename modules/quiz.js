@@ -62,10 +62,8 @@ export function renderQuestion() {
         document.querySelector("#question-progress");
     const progressFill =
         document.querySelector("#progress-fill");
-
     questionProgress.textContent =
         `Question ${currentIndex + 1} of ${total}`;
-
     progressFill.style.width =
         `${((currentIndex + 1) / total) * 100}%`;
     startTimer(
@@ -115,6 +113,22 @@ export function renderCategories() {
             .join("");
 }
 
+export function renderSubjectLabel() {
+    const subjectLabel = document.querySelector("#subject-label");
+    const selectedCategory = categories.find(
+        (category) => category.id === quizConfig.category
+    );
+    if (!selectedCategory) return;
+    subjectLabel.innerHTML = `
+        <span class="subject-icon">
+            ${selectedCategory.icon}
+        </span>
+        <span>
+            ${selectedCategory.name}
+        </span>
+    `;
+}
+
 export function startQuiz(questions) {
     if (!questions || questions.length === 0) {
         return;
@@ -122,6 +136,7 @@ export function startQuiz(questions) {
     questionsConfig.question = questions;
     questionsConfig.currentIndex = 0;
     questionsConfig.score = 0;
+    renderSubjectLabel();
     startScreen.classList.add("hidden");
     questionsScreen.classList.remove("hidden");
     renderQuestion();
